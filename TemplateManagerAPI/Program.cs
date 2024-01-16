@@ -11,6 +11,9 @@ namespace TemplateManagerAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            //Add the DBContext for ASP.NET Core 6 
+            builder.Services.AddDbContext<TemplatemgrContext>(options =>
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("ConexionDatabase")));
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -18,11 +21,7 @@ namespace TemplateManagerAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<ITemplateMGR, TemplateService>();
-
-            //Add the DBContext for ASP.NET Core 6 
-            builder.Services.AddDbContext<TemplatemgrContext>(options =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("ConexionDatabase")));
-
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

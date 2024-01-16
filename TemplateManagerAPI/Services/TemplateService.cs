@@ -7,9 +7,9 @@ namespace TemplateManagerAPI.Services
     public class TemplateService : ITemplateMGR
     {
         private TemplatemgrContext _context;
-        public TemplateService()
+        public TemplateService(TemplatemgrContext tempCNT)
         {
-            _context = new TemplatemgrContext();
+            _context = tempCNT; 
         }
         public async Task AddTemplate(Template template)
         {

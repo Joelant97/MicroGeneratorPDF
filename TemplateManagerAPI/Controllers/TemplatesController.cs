@@ -19,8 +19,8 @@ namespace TemplateManagerAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<Template>> Get()
         {
-            var vehicles = await _templateService.GetAllTemplates();
-            return vehicles;
+            var templates = await _templateService.GetAllTemplates();
+            return templates;
         }
 
         // GET api/<TemplatesController>/5

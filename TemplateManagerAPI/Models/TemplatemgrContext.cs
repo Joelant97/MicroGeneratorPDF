@@ -6,10 +6,6 @@ namespace TemplateManagerAPI.Models;
 
 public partial class TemplatemgrContext : DbContext
 {
-    public TemplatemgrContext()
-    {
-    }
-
     public TemplatemgrContext(DbContextOptions<TemplatemgrContext> options)
         : base(options)
     {
@@ -17,9 +13,6 @@ public partial class TemplatemgrContext : DbContext
 
     public virtual DbSet<Template> Templates { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
-    {     
-    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Template>(entity =>
