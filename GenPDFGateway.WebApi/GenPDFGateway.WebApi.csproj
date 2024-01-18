@@ -7,18 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="TemplateFile\carta-solicitud-JoelAntonio.html" />
-    <None Remove="TemplateFile\cartasolicitud-JoelAntonio.html" />
+    <Compile Remove="PdfGenerated\**" />
+    <Compile Remove="TemplateFile\**" />
+    <Content Remove="PdfGenerated\**" />
+    <Content Remove="TemplateFile\**" />
+    <EmbeddedResource Remove="PdfGenerated\**" />
+    <EmbeddedResource Remove="TemplateFile\**" />
+    <None Remove="PdfGenerated\**" />
+    <None Remove="TemplateFile\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="TemplateFile\cartasolicitud-JoelAntonio.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Select.HtmlToPdf.NetCore" Version="22.1.0" />
+    <PackageReference Include="IronPdf" Version="2023.11.7" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="PdfGenerated\" />
+    <Folder Include="Contracts\v1\Generator\Response\" />
+    <Folder Include="Services\v1\" />
   </ItemGroup>
 
 </Project>
