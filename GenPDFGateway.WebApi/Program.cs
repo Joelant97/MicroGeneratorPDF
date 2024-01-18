@@ -1,6 +1,15 @@
+using Azure.Core;
+using GenPDFGateway.WebApi.Contracts.v1.DTO;
+using GenPDFGateway.WebApi.Contracts.v1.Response;
 using HandlebarsDotNet;
 using IronPdf;
 using IronPdf.Rendering;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Buffers.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using TemplateManagerAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,47 +23,53 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 
-app.MapPost("/generator", () =>
+app.MapPost("/generator/{id}", async (int id, [FromBody] Generator generator) =>
 {
 
     //TODO:Logic to get the data from TempleManagerAPI
+    //call Microservice in TemplateMngApi
+    var httpClient = new HttpClient();
+    var uri = "https://localhost:7118/api/Templates/" + id;
+    var jsonResponse = await httpClient.GetStringAsync(uri);
+    var template = JsonConvert.DeserializeObject<Template>(jsonResponse);
+
     //And Custom the info with the Client App info Context.
 
-    var htmlTemplate = "<!DOCTYPE html>\r\n\t<html>\r\n\t<head>\r\n\t<title>Carta de Solicitud</title>" +
-    "\r\n\t</head>\r\n\t<body>\r\n\t<h1>Carta de Solicitud</h1>\r\n\t<p>Estimado/a {{AddresseeName}},</p>" +
-    "\r\n\t<p>Me dirijo a usted para expresar mi interés en el puesto de {{DesiredPosition}}\r\n\ten su empresa." +
-    " Soy un/a profesional con experiencia en el campo y estoy\r\n\tentusiasmado/a con la oportunidad de formar " +
-    "parte de su equipo.</p>\r\n\t<p>Adjunto a esta carta encontrará mi currículum vitae, que detalla mi formación" +
-    "\r\n\tacadémica y mi experiencia laboral relevante. Estoy seguro/a de que mis\r\n\thabilidades y conocimientos" +
-    " en {{RelevantAreas}} serán un valioso aporte para su\r\n\torganización.</p>\r\n\t<p>Quedo a su disposición para" +
-    " proporcionar cualquier información adicional que\r\n\tpueda necesitar. Agradezco de antemano su consideración y" +
-    " espero tener la\r\n\toportunidad de discutir cómo puedo contribuir al éxito de su empresa.</p>\r\n\t" +
-    "<p>Atentamente,</p>\r\n\t<p>{{AuthorName}}</p>\r\n\t<p>{{CurrentDate}}</p>\r\n\t</body>\r\n\t</html>";
-
-
-    string authorName = "Joel Antonio";
-    string currentDate = DateTime.Now.Date.ToString("yyyy-MM-dd");
+    //Format Name in Document
+    string authorName = generator.context.author_name;
+    string currentDate = generator.context.current_date;
     string currentDate2 = DateTime.Now.Millisecond.ToString();
 
-    var template = Handlebars.Compile(htmlTemplate);
 
-    var data = new { 
-        AddresseeName = "Grupo Punta Cana",
-        DesiredPosition = "Desarrollador",
-        RelevantAreas = "Desarrollo de Software",
+    var tempHandlComp = Handlebars.Compile(template.Content);
+
+    var data = new {
+        AddresseeName = generator.context.addressee_name,
+        DesiredPosition = generator.context.desired_position,
+        RelevantAreas = generator.context.relevant_areas,
         AuthorName = authorName,
         CurrentDate = currentDate
-        };
-    var result = template(data);
+    };
+    var result = tempHandlComp(data);
 
     var renderer = new ChromePdfRenderer();
     var pdf = renderer.RenderHtmlAsPdf(result);
-    pdf.SaveAs( "Doc_"+authorName+"_"+currentDate+"-"+currentDate2+".pdf");
+    string docName = "Doc_" + authorName + "_" + currentDate + "-" + currentDate2 + ".pdf";
+    pdf.SaveAs(docName);
+
+
+    var obj = new GeneratorResponse
+    {
+        pdf = docName
+    };
+
+    var jsonResult = JsonConvert.SerializeObject(obj);
+    return jsonResult;
 
 });
 
 
-//Service to call TemplateApi Microservice
+// GET: api/<GeneratorController>
 app.MapGet("/generator", () =>
 {
     
