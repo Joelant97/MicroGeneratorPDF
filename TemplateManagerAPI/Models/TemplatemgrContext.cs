@@ -21,18 +21,8 @@ public partial class TemplatemgrContext : DbContext
 
             entity.ToTable("Template");
 
-            entity.Property(e => e.AddresseeName)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.AuthorName)
-                .HasMaxLength(50)
-                .IsUnicode(false);
             entity.Property(e => e.Content)
                 .HasMaxLength(2000)
-                .IsUnicode(false);
-            entity.Property(e => e.CurrentDate).HasColumnType("date");
-            entity.Property(e => e.DesiredPosition)
-                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.FileType)
                 .HasMaxLength(50)

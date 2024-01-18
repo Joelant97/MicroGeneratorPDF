@@ -11,13 +11,5 @@ public partial class Template
 
     public string? Content { get; set; }
 
-    public string? AddresseeName { get; set; }
-
-    public string? DesiredPosition { get; set; }
-
-    public string? AuthorName { get; set; }
-
-    public DateTime? CurrentDate { get; set; }
-
     public string? FileType { get; set; }
 }

@@ -59,12 +59,12 @@ app.MapPost("/generator", async ([FromBody] Generator generator) =>
     pdf.SaveAs(docName);
 
 
-    var obj = new GeneratorResponse
-    {
-        pdf = docName
-    };
-
-    var jsonResult = JsonConvert.SerializeObject(obj);
+    var jsonResult = JsonConvert.SerializeObject(
+        new GeneratorResponse
+        {
+            pdf = docName
+        }
+     );
     return jsonResult;
 
 });

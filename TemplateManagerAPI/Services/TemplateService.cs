@@ -43,10 +43,6 @@ namespace TemplateManagerAPI.Services
             var templateObj = await _context.Templates.FindAsync(id);
             templateObj.Name = template.Name;
             templateObj.Content = template.Content;
-            templateObj.AddresseeName = template.AddresseeName;
-            templateObj.DesiredPosition = template.DesiredPosition;
-            templateObj.AuthorName = template.AuthorName;
-            templateObj.CurrentDate = DateTime.Now;
             templateObj.FileType = template.FileType;
             await _context.SaveChangesAsync();
         }
