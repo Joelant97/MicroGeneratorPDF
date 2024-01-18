@@ -14,6 +14,7 @@ using TemplateManagerAPI.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 IronPdf.License.LicenseKey = builder.Configuration.GetConnectionString("LicenseKeyIronPdf");
+string routeTemp = builder.Configuration.GetConnectionString("TemplateServices");
 
 // Add services to the container.
 var app = builder.Build();
@@ -23,13 +24,13 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 
-app.MapPost("/generator/{id}", async (int id, [FromBody] Generator generator) =>
+app.MapPost("/generator", async ([FromBody] Generator generator) =>
 {
 
     //TODO:Logic to get the data from TempleManagerAPI
     //call Microservice in TemplateMngApi
     var httpClient = new HttpClient();
-    var uri = "https://localhost:7118/api/Templates/" + id;
+    var uri = routeTemp + generator.template_id;
     var jsonResponse = await httpClient.GetStringAsync(uri);
     var template = JsonConvert.DeserializeObject<Template>(jsonResponse);
 

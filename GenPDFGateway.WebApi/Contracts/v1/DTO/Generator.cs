@@ -13,7 +13,7 @@
 
     public class Generator
     {
-        public string? template_name { get; set; }
+        public string template_id { get; set; }
         public Context context { get; set; }
     }
 
